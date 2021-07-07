@@ -1,4 +1,3 @@
-
 def goodPrint(df):
     with pd.option_context('display.max_rows', None, 'display.max_columns', None):  # more options can be specified also
         print(df)
@@ -74,9 +73,6 @@ stocksCAD = tickerEquityCAD + tickerCreditCAD + tickerAltsCAD + tickerHedgeCAD +
 
 start = datetime(2010, 1, 1)
 end = datetime(2020, 6, 1)
-
-# price = pdr.get_data_yahoo(stocks, start=start, end=end)
-# price = price["Adj Close"]
 
 price, rtn = utilityFuncs.pull_data(stocks)
 priceCAD, rtnCAD = utilityFuncs.pull_data(stocksCAD)
@@ -329,13 +325,13 @@ portfolioValue["Value_CAD"] = portfolioValue["CADTickers"] + portfolioValue["USD
 rebalancing = portfolioValue[~portfolioValue['Principal'].diff().isin([0])].index
 portfolioValue["Return"] = portfolioValue["Value_CAD"].pct_change()
 portfolioValue.loc[list(portfolioValue.loc[portfolioValue.index.isin(rebalancing)][1:].index), 'Return'] = (
-                                                                                                           portfolioValue.loc[
-                                                                                                               list(
-                                                                                                                   portfolioValue.loc[
-                                                                                                                       portfolioValue.index.isin(
-                                                                                                                           rebalancing)][
-                                                                                                                   1:].index), 'Value_CAD']) / (
-                                                                                                                       (
+                                                                                                               portfolioValue.loc[
+                                                                                                                   list(
+                                                                                                                       portfolioValue.loc[
+                                                                                                                           portfolioValue.index.isin(
+                                                                                                                               rebalancing)][
+                                                                                                                       1:].index), 'Value_CAD']) / (
+                                                                                                                   (
                                                                                                                        portfolioValue.shift(
                                                                                                                            1).loc[
                                                                                                                            list(
@@ -370,7 +366,7 @@ df = pd.read_csv("MacroData.csv", index_col='DATE')
 df = df.loc[df.index >= '2000-03-01'].iloc[:-2, :]
 df = df.applymap(lambda x: float(x))
 credit_risk_premium = (df['BAMLC0A4CBBBEY'] - df['BAMLC0A1CAAAEY']) - (
-            df['BAMLC0A4CBBBEY'] - df['BAMLC0A1CAAAEY']).shift(1)
+        df['BAMLC0A4CBBBEY'] - df['BAMLC0A1CAAAEY']).shift(1)
 
 inflation = df['CPIAUCSL'].pct_change().dropna() * 100 * 12
 Industrial_prod_growth = df['INDPRO'].pct_change().dropna() * 100
@@ -378,49 +374,10 @@ riskData = pd.DataFrame(inflation).join(Industrial_prod_growth).join(df.iloc[:, 
 riskData['CreditPremium'] = credit_risk_premium
 riskData.columns = ['Inflation', 'IndustrialProdGrowth', 'T-Bill', 'Oil', 'Libor', 'House', 'Unemploy', 'CreditPremium']
 riskData['Unexpected Inflation'] = (riskData['Inflation'] - riskData['Inflation'].shift(1)) - (
-            riskData['T-Bill'].shift(1) - riskData['T-Bill'].shift(2))
+        riskData['T-Bill'].shift(1) - riskData['T-Bill'].shift(2))
 riskData = riskData.dropna()
 riskData = riskData[['IndustrialProdGrowth', 'Oil', 'Unemploy', 'House', 'CreditPremium', 'Unexpected Inflation']]
 
-
-# riskData.head()
-# riskData.describe()
-#
-# riskData.corr()
-
-# from google.colab import drive
-# drive.mount('/content/drive')
-
-# # riskReturns=portfolioValue.Return.dropna()
-# portfolioValue['Return_temp']=(portfolioValue[Alt_ticker].sum(axis=1)).pct_change().dropna()
-# # portfolioValue.loc[list(portfolioValue.loc[portfolioValue.index.isin(rebalancing)][1:].index),'Return_temp']=(portfolioValue.loc[list(portfolioValue.loc[portfolioValue.index.isin(rebalancing)][1:].index),'Value_CAD'])/((portfolioValue.shift(1).loc[list(portfolioValue.loc[portfolioValue.index.isin(rebalancing)][1:].index),'Value_CAD'])+10000)-1
-# portfolioValue.loc[list(portfolioValue.loc[portfolioValue.index.isin(rebalancing)][1:].index),'Return_temp']=np.nan
-# riskReturns = portfolioValue['Return_temp'].fillna(method='ffill')
-# riskReturns.index = riskReturns.index.map(lambda x:pd.to_datetime(str(x)))
-# # monthlyReturns=riskReturns.groupby([riskReturns.index.year,riskReturns.index.month]).sum()
-# monthlyReturns = (riskReturns+1).groupby([riskReturns.index.year,riskReturns.index.month]).prod()-1
-# monthlyReturns.index.names=["Year","Month"]
-# monthlyReturns=monthlyReturns.reset_index(level=[0,1])
-# indexList=[]
-# for i in range(len(monthlyReturns)):
-#   indexList.append(date(int(monthlyReturns.iloc[i].Year),int(monthlyReturns.iloc[i].Month),1))
-# monthlyReturns.index=indexList
-# monthlyReturns.drop(["Year","Month"],axis=1,inplace=True)
-# monthlyReturns = monthlyReturns.set_index(pd.DatetimeIndex(monthlyReturns.index))
-# monthlyReturns.columns=['Returns']
-# X=riskData.loc["2015-04-01":"2020-03-01"][riskData.columns]
-# Y=monthlyReturns.loc["2015-04-01":"2020-03-01"]
-#
-# X = sm.add_constant(X)
-# model = sm.OLS(Y, X).fit()
-# model.summary()
-#
-# # Basic correlogram
-# sns.pairplot(X.join(Y))
-# plt.show()
-
-
-# model.params
 
 def market_econ_regression(PortfolioValue, isPortfolio=False):
     # PortfolioValue = PortfolioValue.sum(axis=1)
@@ -431,13 +388,13 @@ def market_econ_regression(PortfolioValue, isPortfolio=False):
     if isPortfolio:
         PortfolioValue.loc[
             list(PortfolioValue.loc[PortfolioValue.index.isin(rebalancing)][1:].index), 'Return_temp'] = (
-                                                                                                         PortfolioValue.loc[
-                                                                                                             list(
-                                                                                                                 PortfolioValue.loc[
-                                                                                                                     PortfolioValue.index.isin(
-                                                                                                                         rebalancing)][
-                                                                                                                 1:].index), 'Value']) / (
-                                                                                                                     (
+                                                                                                             PortfolioValue.loc[
+                                                                                                                 list(
+                                                                                                                     PortfolioValue.loc[
+                                                                                                                         PortfolioValue.index.isin(
+                                                                                                                             rebalancing)][
+                                                                                                                     1:].index), 'Value']) / (
+                                                                                                                 (
                                                                                                                      PortfolioValue.shift(
                                                                                                                          1).loc[
                                                                                                                          list(
@@ -539,32 +496,22 @@ downScenario['Portfolio Estimated Return'] = downPortfolio
 upScenario
 downScenario
 
-# Risk Exposure
-# EQ = portfolioValue[tickerEquity].loc[:'2020-06-01'].sum(axis=1)
-# portfolioValue.loc['2020-06-01'][:-7][tickerEquity]
 CR = portfolioValue[tickerCredit].loc[:'2020-06-01'].sum(axis=1)
 
-
-# Hedge = portfolioValue.loc[:'2020-06-01'].iloc[:,10:13].sum(axis=1)
-# PE = portfolioValue.loc[:'2020-06-01'].iloc[:,13:15].sum(axis=1)
-# Alternative = portfolioValue.loc[:'2020-06-01'].iloc[:,15].sum()
-# pd.DataFrame({'EQ':EQ,'CR':CR,'Hedge':Hedge,'PE':PE,'Alternative':Alternative}).pct_change().dropna().cov()
 
 def getExposure(portfolioValue, date='2020-06-01'):
     w = portfolioValue.loc[date][:-7] / (portfolioValue.loc[date][:-7].sum())
     EQw = w[tickerEquity].sum()
     CRw = w[tickerCredit].sum()
     Alt_w = w[tickerAlts].sum()
-    Hedge_w = w[tickerHedge].sum()
     EQw_CAD = w[tickerEquityCAD].sum()
     CRw_CAD = w[tickerCreditCAD].sum()
     Alt_w_CAD = w[tickerAltsCAD].sum()
-    Hedge_w_CAD = w[tickerHedgeCAD].sum()
     cash = w['Cash']
     # list of strings
-    lst = [EQw, CRw, Alt_w, Hedge_w, EQw_CAD, CRw_CAD, Alt_w_CAD, Hedge_w_CAD, cash]
+    lst = [EQw, CRw, Alt_w, EQw_CAD, CRw_CAD, Alt_w_CAD, cash]
     df = pd.DataFrame(lst,
-                      index=['EQ_USD', 'CR_USD', 'Alt_USD', 'Hedge_USD', 'EQ_CAD', 'CR_CAD', 'Alt_CAD', 'Hedge_CAD',
+                      index=['EQ_USD', 'CR_USD', 'Alt_USD', 'EQ_CAD', 'CR_CAD', 'Alt_CAD',
                              'Cash'], columns=['Weight'])
     return df
 
@@ -579,37 +526,27 @@ def getReturn(PortfolioValue, date='2020-06-01'):
     PortfolioValue = PortfolioValue.copy()
     PortfolioValue['Value'] = PortfolioValue.sum(axis=1)
     PortfolioValue['Return_temp'] = PortfolioValue['Value'].pct_change().dropna()
-    # if isPortfolio:
-    #     PortfolioValue.loc[list(PortfolioValue.loc[PortfolioValue.index.isin(rebalancing)][1:].index),'Return_temp']=(PortfolioValue.loc[list(PortfolioValue.loc[PortfolioValue.index.isin(rebalancing)][1:].index),'Value'])/((PortfolioValue.shift(1).loc[list(PortfolioValue.loc[PortfolioValue.index.isin(rebalancing)][1:].index),'Value'])+10000)-1
-    #     riskReturns = PortfolioValue['Return_temp']
-    # else:
     PortfolioValue.loc[
         list(PortfolioValue.loc[PortfolioValue.index.isin(rebalancing)][1:].index), 'Return_temp'] = np.nan
     riskReturns = PortfolioValue['Return_temp'].fillna(method='ffill')
     return riskReturns.loc[:date]
 
 
-# returnAttr = getReturn(portfolioValue,date='2020-06-01')
-
 def getReturnAttribution(portfolioValue, date='2020-06-01'):
     EQ = getReturn(portfolioValue[tickerEquity], date)[-1]
     CR = getReturn(portfolioValue[tickerCredit], date)[-1]
     Alt = getReturn(portfolioValue[tickerAlts], date)[-1]
-    # Hedge = getReturn(portfolioValue[tickerHedge],date)[-1]
     EQ_CAD = getReturn(portfolioValue[tickerEquityCAD], date)[-1]
     CR_CAD = getReturn(portfolioValue[tickerCreditCAD], date)[-1]
     Alt_CAD = getReturn(portfolioValue[tickerAltsCAD], date)[-1]
-    # Hedge_CAD = getReturn(portfolioValue[tickerHedgeCAD],date)[-1]
     returns = [EQ, CR, Alt, EQ_CAD, CR_CAD, Alt_CAD]
     return_sum = np.array(returns).sum()
     EQw = EQ / return_sum
     CRw = CR / return_sum
     Alt_w = Alt / return_sum
-    # Hedge_w = Hedge/return_sum
     EQw_CAD = EQ_CAD / return_sum
     CRw_CAD = CR_CAD / return_sum
     Alt_w_CAD = Alt_CAD / return_sum
-    # Hedge_w_CAD = Hedge_CAD/return_sum
     returns_attr = [EQw, CRw, Alt_w, EQw_CAD, CRw_CAD, Alt_w_CAD]
     name = ['EQ_USD', 'CR_USD', 'Alt_USD', 'EQ_CAD', 'CR_CAD', 'Alt_CAD']
     df = pd.DataFrame({'Returns': returns, 'Returns Attribution': returns_attr, 'Name': name}).set_index('Name')
@@ -623,25 +560,19 @@ df['Returns Attribution'].plot.pie(autopct='%.2f', fontsize=12, figsize=(8, 8))
 
 # Risk Attribution
 def getRiskAttribution(portfolioValue, date='2020-06-01'):
-    # portfolioValue = portfolioValue.loc[:date]
     w = getExposure(portfolioValue, date)
-    # print(w)
     EQ = getReturn(portfolioValue[tickerEquity], date)
     CR = getReturn(portfolioValue[tickerCredit], date)
     Alt = getReturn(portfolioValue[tickerAlts], date)
-    # Hedge = getReturn(portfolioValue[tickerHedge],date).std()
     EQ_CAD = getReturn(portfolioValue[tickerEquityCAD], date)
     CR_CAD = getReturn(portfolioValue[tickerCreditCAD], date)
     Alt_CAD = getReturn(portfolioValue[tickerAltsCAD], date)
-    # Hedge_CAD = getReturn(portfolioValue[tickerHedgeCAD],date).std()
     returns = [EQ, CR, Alt, EQ_CAD, CR_CAD, Alt_CAD]
     name = ['EQ_USD', 'CR_USD', 'Alt_USD', 'EQ_CAD', 'CR_CAD', 'Alt_CAD']
     w = w.loc[name] / w.loc[name].sum()
     df = pd.DataFrame(returns).T.dropna()
     df.columns = name
-    # print(df)
     Q = df.cov()
-    # print(Q)
     riskAttribution = np.dot(np.array(w.T), np.array(Q))
     risk = pd.DataFrame(riskAttribution, columns=name, index=[date])
     riskAttr = risk / risk.sum(axis=1)[0]
@@ -651,5 +582,3 @@ def getRiskAttribution(portfolioValue, date='2020-06-01'):
 riskAttribution = getRiskAttribution(portfolioValue, '2020-06-01')
 
 riskAttribution['2020-06-01'].plot.pie(autopct='%.2f', fontsize=12, figsize=(8, 8))
-# riskAttribution.applymap(lambda x:x/(riskAttribution.sum(axis=1)).values).sum(axis=1)
-#######################################################################
