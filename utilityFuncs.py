@@ -12,7 +12,6 @@ import pandas as pd
 import statsmodels.api as sm
 import numpy as np; np.random.seed(0)
 import seaborn as sns; sns.set()
-from hmmlearn import hmm
 from sklearn.decomposition import PCA
 import time
 import regimeDetection
