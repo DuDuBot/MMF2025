@@ -1,9 +1,3 @@
-'''
-
-@Authors : Pulkit Gaur, Hongyi Wu, Jiaqi Feng
-
-'''
-
 
 def goodPrint(df):
     with pd.option_context('display.max_rows', None, 'display.max_columns', None):  # more options can be specified also
@@ -12,34 +6,22 @@ def goodPrint(df):
 
 ########################################################################
 
-## Import Statements, please install hmmlearn & quantstats
-
-
 from pandas_datareader import data as pdr
 import quantstats as qs
-# import fix_yahoo_finance as yf
-import yfinance as yf
-from tqdm import tqdm
+
 from datetime import datetime
 from datetime import date, timedelta
 import matplotlib.pyplot as plt
-import numpy as np
 import pandas as pd
 import statsmodels.api as sm
-import numpy as np;
+import numpy as np
 
 np.random.seed(0)
-import seaborn as sns;
+import seaborn as sns
 
 sns.set()
-from hmmlearn import hmm
-from sklearn.decomposition import PCA
-import time
-import regimeDetection
-import strategies
 import utilityFuncs
 import os
-import regimeDetection as rgd
 
 os.getcwd()
 #######################################################################
@@ -125,44 +107,8 @@ else:
 # Regime Detection
 if 'Signal.pkl' in os.listdir(os.getcwd() + '/Data'):
     signalSeries = pd.read_pickle('Data/Signal.pkl')
-else:
-    dataHMM = pd.read_excel('Data/HMM_data.xlsx', index_col=0)
-    start = datetime(2008, 1, 1)
-    end = datetime(2020, 5, 31)
-
-    term_premium = pdr.get_data_yahoo(['^TYX', '^IRX'], start=start, end=end)
-    term_premium = term_premium["Adj Close"]
-    term_premium = term_premium['^TYX'] - term_premium['^IRX']
-
-    dataHMM = dataHMM.loc[term_premium.index]
-    dataHMM.iloc[:, -1] = term_premium.values
-
-    dataInput = dataHMM
-    dataInput_m = dataInput.resample('m').last()
-    dataNormed1 = rgd.percentile_data(dataInput, 1)
-
-    EMIndex1 = (dataNormed1 * [0.2, 0.2, 0.2, 0.2, 0.15, 0.05]).sum(axis=1)  # 1-year version
-
-    model = hmm.GMMHMM(n_components=3, covariance_type="full", random_state=0)
-
-    newStates1 = []
-    for i in tqdm(range(251, EMIndex1.size + 1)):
-        dataHMMTemp = EMIndex1.iloc[:i].values.reshape(-1, 1)
-        states = rgd.fix_states(model.fit(dataHMMTemp).predict(dataHMMTemp), EMIndex1.iloc[:i].values)
-        newStates1.append(states[-1])
-
-    dataHMMInit1 = EMIndex1.iloc[:250].values.reshape(-1, 1)
-    modelInit1 = model.fit(dataHMMInit1)
-    stateInit1 = rgd.fix_states(modelInit1.predict(dataHMMInit1), dataHMMInit1)
-    updatedStates1 = pd.Series(list(stateInit1) + newStates1, index=EMIndex1.index)
-    signalOff = [i for i in range(1, updatedStates1.size) if updatedStates1[i - 1] == 1 and updatedStates1[i] == 2]
-    signalOn = [i for i in range(1, updatedStates1.size) if updatedStates1[i - 1] == 2 and updatedStates1[i] == 1]
-
-    signalSeries = pd.Series(0, index=updatedStates1.index)
-    signalSeries[signalOn] = 1
-    signalSeries[signalOff] = -1
-
-    signalSeries.to_pickle('Data/Signal.pkl')
+# else:
+# HMM
 
 #######################################################################
 

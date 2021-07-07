@@ -1,9 +1,4 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Tue Jul  7 18:03:15 2020
 
-@author: pulki
-"""
 from pandas_datareader import data as pdr
 # ! pip install quantstats --upgrade --no-cache-dir
 import quantstats as qs

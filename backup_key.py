@@ -1,10 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Fri Jul 10 21:21:57 2020
-
-@author: keyfe
-"""
-
 
 tickerEquity=['XLY','XLI','XLF','XLV','XLK','XLP']
 # Consumer Discritionary, Industrial, Financial, Health Care,Technology,

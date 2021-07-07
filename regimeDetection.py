@@ -1,5 +1,3 @@
-"""# Regime Detection"""
-
 
 from pandas_datareader import data as pdr
 # ! pip install quantstats --upgrade --no-cache-dir

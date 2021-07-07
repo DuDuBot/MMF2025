@@ -1,9 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Tue Jul  7 17:51:05 2020
-
-@author: pulki
-"""
 
 #import fix_yahoo_finance as yf
 import yfinance as yf
