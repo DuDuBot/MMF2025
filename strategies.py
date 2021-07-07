@@ -20,20 +20,6 @@ class MVPort:
     def __init__(self, rtnM):
         self.rtnM = rtnM
 
-    def price_to_log_return(self, timeseries):
-
-        log_return = np.diff(np.log(timeseries), axis=0)
-        return log_return
-
-    def calculate_miu_cov(self, timeseries):
-        log_return = self.price_to_log_return(timeseries)
-        miu = np.mean(log_return, axis=0)
-        cov = np.cov(log_return.T)
-        return miu, cov
-
-    def portfolio_std(self,  weight, cov):
-        return np.sqrt(np.dot(np.dot(weight, cov), weight.T))
-
     def objection_error(self, weight, args):
         miu = args[0]
         cov = args[1]
