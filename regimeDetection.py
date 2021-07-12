@@ -1,23 +1,11 @@
-
-from pandas_datareader import data as pdr
-# ! pip install quantstats --upgrade --no-cache-dir
-import quantstats as qs
-import strategies
-#import fix_yahoo_finance as yf
-import yfinance as yf
-from tqdm import tqdm
-from datetime import datetime
-from datetime import date,timedelta
-import matplotlib.pyplot as plt
-import numpy as np
 import pandas as pd
-import statsmodels.api as sm
-import numpy as np; np.random.seed(0)
-import seaborn as sns; sns.set()
-from sklearn.decomposition import PCA
-import time
+import numpy as np
+import seaborn as sns
+np.random.seed(0)
+sns.set()
 
-def percentile_data(X,period=3,extend=False):
+
+def percentile_data(X, period=3, extend=False):
     try:
         start=X.index[0].replace(year=X.index[0].year+period)
     except:
