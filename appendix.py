@@ -13,7 +13,7 @@ alter_name = ['MNA']
 
 stocks = equity_name + credit_name + pe_name + hedge_name + alter_name + ['SPY', 'CAD=X', '^IRX']
 
-price_data = pdr.get_data_yahoo(stocks, start=datetime(2010, 1, 1), end=datetime(2020, 12, 12))
+price_data = pdr.get_data_yahoo(stocks, start=datetime(2010, 1, 1), end=datetime(2021, 12, 12))
 adj_price = price_data['Adj Close'].dropna(how='any').drop(columns=['CAD=X', '^IRX'])
 
 risk_free = adj_price.iloc[1:, -1] / 252 / 100
@@ -29,7 +29,7 @@ return_to_name = price_to_name.pct_change().dropna()
 
 benchmark_return = (log_return[['SPY', 'LQD']] * np.array([0.6, 0.4])).sum(axis=1)
 
-benchmark_return = benchmark_return.loc[pd.to_datetime('2015-01-01'):]
+benchmark_return = benchmark_return.loc[pd.to_datetime('2016-01-01'):]
 benchmark_net_value = np.exp(benchmark_return.cumsum())
 benchmark_sharpe = benchmark_return.mean() / benchmark_return.std() * 16
 
