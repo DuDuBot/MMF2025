@@ -184,26 +184,26 @@ data_to_name = pd.DataFrame(data.values, index=data.index.values, columns=cols).
 return_to_name = data_to_name.pct_change().dropna()
 
 # Use when regime changes
-hedge_name = ['IEF']
-hedge_industry_name = ['US_Treasury']
-hedge_name_cad = ['CGL.TO']
-hedge_industry_cad = ['Gold_CAD']
+#hedge_name = ['IEF']
+#hedge_industry_name = ['US_Treasury']
+#hedge_name_cad = ['CGL.TO']
+#hedge_industry_cad = ['Gold_CAD']
 
-alt_name = ['PSP', 'IGF', 'VNQ', 'MNA']
-alt_industry_usd = ['PE', 'Infra', 'REITs', 'HF']
-alt_name_cad = ['CGR.TO', 'CIF.TO']
-alt_industry_cad = ['REITs', 'Infra']
+#alt_name = ['PSP', 'IGF', 'VNQ', 'MNA']
+#alt_industry_usd = ['PE', 'Infra', 'REITs', 'HF']
+#alt_name_cad = ['CGR.TO', 'CIF.TO']
+#alt_industry_cad = ['REITs', 'Infra']
 
-stocks = equity_name + credit_name + alt_name + hedge_name + ['SPY', 'CAD=X', '^IRX']
-stocks_cad = equity_name_cad + credit_name_cad + alt_name_cad + hedge_name_cad + ['SPY', 'CAD=X', '^IRX']
+#stocks = equity_name + credit_name + alt_name + hedge_name + ['SPY', 'CAD=X', '^IRX']
+#stocks_cad = equity_name_cad + credit_name_cad + alt_name_cad + hedge_name_cad + ['SPY', 'CAD=X', '^IRX']
 
-stock_price, stock_return = helper_fcn.get_price_return_data(stocks)
-price_cad, return_cad = helper_fcn.get_price_return_data(stocks_cad)
-date_intersection = [i for i in stock_price.index if i in price_cad.index]
-prices = pd.concat([stock_price.loc[date_intersection], price_cad.loc[date_intersection]], axis=1)
+#stock_price, stock_return = helper_fcn.get_price_return_data(stocks)
+#price_cad, return_cad = helper_fcn.get_price_return_data(stocks_cad)
+#date_intersection = [i for i in stock_price.index if i in price_cad.index]
+#prices = pd.concat([stock_price.loc[date_intersection], price_cad.loc[date_intersection]], axis=1)
 
-price_hedge = pdr.get_data_yahoo(hedge_name + hedge_name_cad, start=datetime(2016, 4, 1), end=datetime(2021, 6, 1))
-price_hedge = price_hedge['Adj Close'].ffill(axis=0).dropna()
+#price_hedge = pdr.get_data_yahoo(hedge_name + hedge_name_cad, start=datetime(2016, 4, 1), end=datetime(2021, 6, 1))
+#price_hedge = price_hedge['Adj Close'].ffill(axis=0).dropna()
 
 if 'weights.pkl' in os.listdir(os.getcwd() + '/Data'):
     merged_weight = pd.read_pickle('Data/weights.pkl')
