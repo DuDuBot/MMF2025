@@ -50,7 +50,7 @@ def mix_attributes(rf, df_mix, num):
 
 
 def get_price_return_data(stocks):
-    price_data = pdr.get_data_yahoo(stocks, start=datetime(2010, 1, 1), end=datetime(2020, 6, 1))
+    price_data = pdr.get_data_yahoo(stocks, start=datetime(2010, 1, 1), end=datetime(2021, 6, 1))
     price_data = price_data["Adj Close"]
 
     price_data = price_data.drop(columns=['CAD=X', '^IRX']).dropna()
