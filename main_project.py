@@ -54,8 +54,8 @@ def market_econ_regression(value, is_port=False):
     monthly_returns = monthly_returns.set_index(pd.DatetimeIndex(monthly_returns.index))
     monthly_returns.columns = ['Returns']
 
-    mdl = sm.OLS(monthly_returns.loc['2015-04-01':'2020-03-01'],
-                 sm.add_constant(risk_data.loc['2015-04-01':'2020-03-01'][risk_data.columns])).fit()
+    mdl = sm.OLS(monthly_returns.loc['2016-04-01':'2021-06-01'],
+                 sm.add_constant(risk_data.loc['2016-04-01':'2021-06-01'][risk_data.columns])).fit()
     return mdl.params
 
 
@@ -160,7 +160,7 @@ def risk_attribution(value, chosen_date):
 
 stocks = ['SCO', 'SPY', 'GLD', 'VWO', 'IEF', 'EMB', 'lqd', 'VNQ', 'MNA', 'CAD=X', '^IRX']
 counter = datetime(2010, 1, 1)
-end = datetime(2020, 6, 1)
+end = datetime(2021, 6, 1)
 
 equity_name = ['XLY', 'XLI', 'XLF', 'XLV', 'XLK', 'XLP']
 equity_industry_usd = ['Consumer Discretionary', 'Industrial', 'Financial', 'Health Care', 'Technology',
@@ -202,7 +202,7 @@ price_cad, return_cad = helper_fcn.get_price_return_data(stocks_cad)
 date_intersection = [i for i in stock_price.index if i in price_cad.index]
 prices = pd.concat([stock_price.loc[date_intersection], price_cad.loc[date_intersection]], axis=1)
 
-price_hedge = pdr.get_data_yahoo(hedge_name + hedge_name_cad, start=datetime(2015, 4, 1), end=datetime(2020, 6, 1))
+price_hedge = pdr.get_data_yahoo(hedge_name + hedge_name_cad, start=datetime(2016, 4, 1), end=datetime(2021, 6, 1))
 price_hedge = price_hedge['Adj Close'].ffill(axis=0).dropna()
 
 if 'weights.pkl' in os.listdir(os.getcwd() + '/Data'):
@@ -229,7 +229,7 @@ else:
 # Rebalancing
 should_allow = []
 temp = []
-x = 2015
+x = 2016
 
 for i in range(6):
     temp.append(date(x + i, 4, 1))
@@ -264,16 +264,16 @@ for w in list(merged_weight.index):
         should_allow.append(False)
 
 erc_weight = merged_weight.loc[should_allow]
-whole_port_data = pdr.get_data_yahoo('CAD=X', start=datetime(2015, 4, 1), end=datetime(2020, 6, 1))
+whole_port_data = pdr.get_data_yahoo('CAD=X', start=datetime(2016, 4, 1), end=datetime(2021, 6, 1))
 adj_close_data = whole_port_data['Adj Close']
 overnight_rate = pd.read_csv('Data/canadaOvernight.csv', index_col=0, parse_dates=True).sort_index()
 
 counter = 90000
-p_value = prices.loc[pd.to_datetime('2015-04-01'):pd.to_datetime('2020-06-01')].dropna()
+p_value = prices.loc[pd.to_datetime('2016-04-01'):pd.to_datetime('2021-06-01')].dropna()
 p_value = (p_value[erc_weight.columns])
 
 stock_price = prices[erc_weight.columns].dropna()
-stock_price = stock_price.loc[pd.to_datetime('2015-04-01'):pd.to_datetime('2020-06-01')].dropna()
+stock_price = stock_price.loc[pd.to_datetime('2016-04-01'):pd.to_datetime('2021-06-01')].dropna()
 investment = []
 cash = []
 
@@ -283,7 +283,7 @@ for i in range(len(erc_weight)):
     try:
         end_date = erc_weight.index[i + 1] - timedelta(days=1)
     except:
-        end_date = date(2020, 6, 1)
+        end_date = date(2021, 6, 1)
 
     reb_to_end_data = p_value[reb_date:end_date]
     reb_date = reb_to_end_data.index[0]
@@ -379,13 +379,13 @@ upward_alternative = np.dot(np.array(upward_situation.iloc[:, :7]), np.array(bet
 upward_situation['Alt Estimated Return'] = upward_alternative
 upward_port = np.dot(np.array(upward_situation.iloc[:, :7]), np.array(beta_portfolio))
 
-credit = p_value[credit_name].loc[:'2020-06-01'].sum(axis=1)
-exposure_to_plot = calculate_exposure(p_value, '2020-06-01')
+credit = p_value[credit_name].loc[:'2021-06-01'].sum(axis=1)
+exposure_to_plot = calculate_exposure(p_value, '2021-06-01')
 exposure_to_plot['Weight'].plot.pie(autopct='%.2f', fontsize=12, figsize=(8, 8))
 
-macro_data = get_attribution(p_value, '2020-06-01')
+macro_data = get_attribution(p_value, '2021-06-01')
 macro_data['Returns Attribution'].sum()
 macro_data['Returns Attribution'].plot.pie(autopct='%.2f', fontsize=12, figsize=(8, 8))
 
-risk_attr = risk_attribution(p_value, '2020-06-01')
-risk_attr['2020-06-01'].plot.pie(autopct='%.2f', fontsize=12, figsize=(8, 8))
+risk_attr = risk_attribution(p_value, '2021-06-01')
+risk_attr['2021-06-01'].plot.pie(autopct='%.2f', fontsize=12, figsize=(8, 8))
